@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Augmented Magnets</string>
+    <string name="LICENSE_KEY">3bVcm+3Pq85g3lVVhdT/YTLkbzKW36ETz+0ZIuwAggj+CBoAG7NQ1v/bXS4fCTFk13xaVz4nMRnqV7NAp7vsiWfhQCkt5kZSK++Uv+FI5e05BlWuf0mmETnHqh5QpgZ0xXC4G7SdrgQQXtAJN10Pq+UT6tK/X745QLQH4dvDaXdTYWx0ZWRfX02gD6oHSM5SDzxn4NWDO76RVUE4Q6fjFoOpXL/xa9ORKRur/m1hmvC93jHk3CCPC2xFebgUnHuzpB1+vO3Hkf92viH2d+TkBrtZ4ZTiBcOnpyBIyTUE9lv2usMikwGZviuVe4ZTtzns27C1eCKQDd14oEzoOrE9Vm6v2T09jnekUtfCkxirwz7sUISAHBM8FwKOXkh2VXe03Llq6SoYRvcV/b20vp7TfWm2YXuAGLlCeUZkaAitxotXhRxTPWa9WxUqj9JCkbiuJgPG7YEJ+y6XopLiZqFvg7kZVJtCJ1/G9OaCPH+nl/fkWVbl9JdkTPE2RUJjXhKxcFKBcZDuLDJ0OLS9mMMs53IXKaNttJd2OHYN3SypbgLsPeBCycmAu4GpLQf8GOreAquDbVhizvCFZ0AOaApDZoQ7MSMkcAQ70V/tokv8CJKWbM8ggXTqObgXQQ+XNU6Z2SrbVnvstEl5z8bHgQNXiuNmmk5oU2p9nYFm0dz8RqHAIcoxwktg8laO+cHAwGzSvFVOvzf60lsG/aelljsDIXlSXp9ml/2ixmvy+jsrtFR+uJsExJONIzYdq8yIoIKyQ4zRkHmcbyzOInrkqd6hdBs57wzUMF8DLIKXVYGGWDA=</string>
+    <string name="welcomeStr">Welcome! \n\nPress start to open the camera. Point your camera \non one of the magnets to see
+        the augmented content.
+    </string>
+    <string name="permissions_denied">Augmented Magnets needs the following permissions to enable an AR experience:</string>
+    <string name="permission_rationale_text">Augmented Magnets needs the following permissions to enable an AR experience:
+    </string>
+    <string name="permission_rationale_title">Augmented Magnets Permissions</string>
+</resources>
