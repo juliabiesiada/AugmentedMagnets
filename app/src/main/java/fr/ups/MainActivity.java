@@ -1,11 +1,9 @@
 package fr.ups;
 
-import android.util.Log;
-import fr.ups.wikitude.rendering.CustomSurfaceView;
-import fr.ups.wikitude.rendering.Driver;
-import fr.ups.wikitude.rendering.GLRenderer;
+import android.app.Activity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+import android.view.WindowManager;
 import com.wikitude.NativeStartupConfiguration;
 import com.wikitude.WikitudeSDK;
 import com.wikitude.common.WikitudeError;
@@ -16,9 +14,13 @@ import com.wikitude.tracker.ImageTarget;
 import com.wikitude.tracker.ImageTracker;
 import com.wikitude.tracker.ImageTrackerListener;
 import com.wikitude.tracker.TargetCollectionResource;
+import fr.ups.wikitude.rendering.CustomSurfaceView;
+import fr.ups.wikitude.rendering.Driver;
+import fr.ups.wikitude.rendering.GLRenderer;
 import fr.ups.wikitude.rendering.StrokedRectangle;
+import fr.ups.wikitude.samples.WikitudeSDKConstants;
 
-public class MainActivity extends AppCompatActivity implements ImageTrackerListener, ExternalRendering {
+public class MainActivity extends Activity implements ImageTrackerListener, ExternalRendering {
 
     private static final String TAG = "MainActivity";
     private WikitudeSDK wikitudeSDK;
@@ -32,21 +34,45 @@ public class MainActivity extends AppCompatActivity implements ImageTrackerListe
 
         wikitudeSDK = new WikitudeSDK(this);
         NativeStartupConfiguration startupConfiguration = new NativeStartupConfiguration();
-        startupConfiguration.setLicenseKey(getString(R.string.LICENSE_KEY));
+        startupConfiguration.setLicenseKey(WikitudeSDKConstants.WIKITUDE_SDK_KEY);
         startupConfiguration.setCameraPosition(CameraSettings.CameraPosition.BACK);
         startupConfiguration.setCameraResolution(CameraSettings.CameraResolution.AUTO);
 
         wikitudeSDK.onCreate(getApplicationContext(), this, startupConfiguration);
 
-        final TargetCollectionResource targetCollectionResource = wikitudeSDK.getTrackerManager().createTargetCollectionResource("../../res/target/target.wtc");
+        final TargetCollectionResource targetCollectionResource = wikitudeSDK.getTrackerManager().createTargetCollectionResource("file:///android_asset/tracker.wtc");
         wikitudeSDK.getTrackerManager().createImageTracker(targetCollectionResource, this, null);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        wikitudeSDK.onResume();
+        customSurfaceView.onResume();
+        driver.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        customSurfaceView.onPause();
+        driver.stop();
+        wikitudeSDK.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wikitudeSDK.onDestroy();
     }
 
     @Override
     public void onRenderExtensionCreated(RenderExtension renderExtension) {
         glRenderer = new GLRenderer(renderExtension);
+        wikitudeSDK.getCameraManager().setRenderingCorrectedFovChangedListener(glRenderer);
         customSurfaceView = new CustomSurfaceView(getApplicationContext(), glRenderer);
-        Driver driver = new Driver(customSurfaceView, 30);
+        driver = new Driver(customSurfaceView, 30);
         setContentView(customSurfaceView);
     }
 

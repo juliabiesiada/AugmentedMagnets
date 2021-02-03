@@ -3,15 +3,17 @@ package fr.ups;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.wikitude.WikitudeSDK;
 import com.wikitude.common.permission.PermissionManager;
+import fr.ups.MainActivity;
+import fr.ups.R;
 
 import java.util.Arrays;
 
@@ -32,9 +34,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 final String[] permissions = new String[]{
                         Manifest.permission.CAMERA,
-                        Manifest.permission.ACCESS_WIFI_STATE,
                         Manifest.permission.INTERNET,
-                        Manifest.permission.ACCESS_NETWORK_STATE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 };
                 permissionManager.checkPermissions(WelcomeActivity.this, permissions,
                         PermissionManager.WIKITUDE_PERMISSION_REQUEST,
@@ -73,5 +74,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        WikitudeSDK.getPermissionManager().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
