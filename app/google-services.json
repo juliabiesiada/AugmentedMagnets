@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "164835032915",
+    "project_id": "augmented-magnets",
+    "storage_bucket": "augmented-magnets.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164835032915:android:e4063b41a9331b30bb6ba6",
+        "android_client_info": {
+          "package_name": "fr.ups"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164835032915-1a7i2st3r0qt26r9ptuvhkl4u890iqcr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.ups",
+            "certificate_hash": "a5eb35d2a35c1093660648aaa563e3556db4cd72"
+          }
+        },
+        {
+          "client_id": "164835032915-ckcerv76lf1ck6la6hos8i6qh0ukmv8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3pmK7ff4VGIS2Ij-ly0N_AouHAz6SiqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164835032915-ckcerv76lf1ck6la6hos8i6qh0ukmv8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
