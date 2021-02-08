@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "164835032915",
+    "firebase_url": "https://augmented-magnets-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "augmented-magnets",
     "storage_bucket": "augmented-magnets.appspot.com"
   },

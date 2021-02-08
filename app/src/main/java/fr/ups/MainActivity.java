@@ -4,8 +4,16 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.wikitude.NativeStartupConfiguration;
 import com.wikitude.WikitudeSDK;
 import com.wikitude.common.WikitudeError;
@@ -99,7 +107,6 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
         Log.v(TAG, "Recognized target " + target.getName());
         StrokedRectangle strokedRectangle = new StrokedRectangle(StrokedRectangle.Type.STANDARD);
         glRenderer.setRenderablesForKey(target.getName() + target.getUniqueId(), strokedRectangle, null);
-        sendData();
     }
 
     @Override
@@ -131,8 +138,24 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
 
         ConnectionHelper connHelper = new ConnectionHelper(this);
         if(connHelper.isConnected()) {
-            NotesHelper notesHelper = new NotesHelper(2,1,"text", "Welcome", null);
-            reference.child("nid").setValue(notesHelper);
+
+            //get current id
+            Query getCurrID = rootNode.getReference("id").orderByChild("value");
+            getCurrID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    curr_id[0] = dataSnapshot.child("value").getValue(Integer.class);
+                    curr_id[0]++;
+                    rootNode.getReference("id").child("value").setValue(curr_id[0]);
+                    NotesHelper notesHelper = new NotesHelper(curr_id[0],1,"text", "Welcome", null);
+                    reference.child(String.valueOf(curr_id[0])).setValue(notesHelper);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }else {
             connHelper.ShowNoConnectionDialog();
         }
