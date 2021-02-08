@@ -1,6 +1,9 @@
 package fr.ups;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -8,12 +11,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.wikitude.NativeStartupConfiguration;
 import com.wikitude.WikitudeSDK;
 import com.wikitude.common.WikitudeError;
@@ -24,6 +33,9 @@ import com.wikitude.tracker.ImageTarget;
 import com.wikitude.tracker.ImageTracker;
 import com.wikitude.tracker.ImageTrackerListener;
 import com.wikitude.tracker.TargetCollectionResource;
+
+import java.io.File;
+
 import fr.ups.wikitude.rendering.CustomSurfaceView;
 import fr.ups.wikitude.rendering.Driver;
 import fr.ups.wikitude.rendering.GLRenderer;
@@ -39,6 +51,10 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
     private GLRenderer glRenderer;
     FirebaseDatabase rootNode;
     DatabaseReference reference;
+    public Uri imageUri;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private int currentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +62,8 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
 
         rootNode = FirebaseDatabase.getInstance();
         reference = rootNode.getReference("notes");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         wikitudeSDK = new WikitudeSDK(this);
         NativeStartupConfiguration startupConfiguration = new NativeStartupConfiguration();
@@ -149,6 +167,7 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
                     rootNode.getReference("id").child("value").setValue(curr_id[0]);
                     NotesHelper notesHelper = new NotesHelper(curr_id[0],1,"text", "Welcome", null);
                     reference.child(String.valueOf(curr_id[0])).setValue(notesHelper);
+                    currentID = curr_id[0];
                 }
 
                 @Override
@@ -161,5 +180,51 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
         }
 
 
+    }
+
+    private void choosePicture() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            uploadPicture();
+        }
+    }
+
+    private void uploadPicture() {
+
+        StorageReference imagesRef = storageReference.child("images/note_" + currentID);
+        //final ProgressDialog pd = new ProgressDialog(this);
+        //pd.setTitle("Uploading image...");
+        //pd.show();
+
+        imagesRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //pd.dismiss();
+                        Toast.makeText(MainActivity.this, "Note added succesfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        //pd.dismiss();
+                        Toast.makeText(MainActivity.this, "An error occured", Toast.LENGTH_SHORT).show();
+                    }
+                //}).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            //@Override
+            //public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                //double progressPercentage = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                //pd.setMessage("Progress: " + (int) progressPercentage + "%");
+            //}
+        });
     }
 }
