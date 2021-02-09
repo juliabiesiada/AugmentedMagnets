@@ -1,13 +1,13 @@
 package fr.ups;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 
@@ -20,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.wikitude.NativeStartupConfiguration;
@@ -33,9 +32,6 @@ import com.wikitude.tracker.ImageTarget;
 import com.wikitude.tracker.ImageTracker;
 import com.wikitude.tracker.ImageTrackerListener;
 import com.wikitude.tracker.TargetCollectionResource;
-
-import java.io.File;
-
 import fr.ups.wikitude.rendering.CustomSurfaceView;
 import fr.ups.wikitude.rendering.Driver;
 import fr.ups.wikitude.rendering.GLRenderer;
@@ -55,11 +51,14 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private int currentID;
+    private FrameLayout frameLayout;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //database stuff
         rootNode = FirebaseDatabase.getInstance();
         reference = rootNode.getReference("notes");
         storage = FirebaseStorage.getInstance();
@@ -76,6 +75,8 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
         final TargetCollectionResource targetCollectionResource = wikitudeSDK.getTrackerManager().createTargetCollectionResource("file:///android_asset/tracker.wtc");
         wikitudeSDK.getTrackerManager().createImageTracker(targetCollectionResource, this, null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        frameLayout = new FrameLayout(this);
 
     }
 
@@ -106,6 +107,7 @@ public class MainActivity extends Activity implements ImageTrackerListener, Exte
         glRenderer = new GLRenderer(renderExtension);
         wikitudeSDK.getCameraManager().setRenderingCorrectedFovChangedListener(glRenderer);
         customSurfaceView = new CustomSurfaceView(getApplicationContext(), glRenderer);
+        //frameLayout.addView(customSurfaceView);
         driver = new Driver(customSurfaceView, 30);
         setContentView(customSurfaceView);
     }

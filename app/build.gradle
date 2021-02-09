@@ -12,6 +12,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -28,16 +32,15 @@ dependencies {
     implementation "com.google.ar:core:1.15.0"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    //database indian guy
-    implementation 'com.github.VishnuSivadasVS:Advanced-HttpURLConnection:1.2'
     implementation 'com.google.firebase:firebase-database:16.0.4'
     implementation 'com.google.firebase:firebase-storage:16.0.4'
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    //I don't know what this is *yet*
     implementation 'com.google.android.material:material:1.3.0'
+    implementation project(':spotify-app-remote-release-0.7.1')
+    implementation "com.google.code.gson:gson:2.8.5"
 }
 
 repositories {
